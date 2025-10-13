@@ -2,6 +2,7 @@ package main
 
 import (
 	"backend/api"
+	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -9,12 +10,16 @@ import (
 
 func main() {
 	r := gin.Default()
-	r.Use(cors.New(cors.Config{
-		AllowAllOrigins: true,
-		AllowMethods:    []string{"GET", "POST", "OPTIONS"},
-		AllowHeaders:    []string{"Origin", "Content-Type", "Accept"},
-	}))
-	api.SetupRouter(r)
 
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"https://rsa.khudobin.ru"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
+
+	api.SetupRouter(r)
 	r.Run(":8080")
 }
