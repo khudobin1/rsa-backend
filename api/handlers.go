@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"backend/internal/rsa"
+	"backend/internal/signature"
 
 	"github.com/gin-gonic/gin"
 )
@@ -83,4 +84,37 @@ func DecipherHandler(c *gin.Context) {
 	rsaObj := &rsa.RSA{N: req.N, D: req.D}
 	text := rsaObj.Decipher(req.Cipher)
 	c.JSON(http.StatusOK, gin.H{"text": text})
+}
+
+type HashRequest struct {
+	N    int    `json:"n"`
+	H    int    `json:"h"`
+	Text string `json:"text"`
+}
+
+func HashHandler(c *gin.Context) {
+	var req HashRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	hash := signature.Hash(req.N, req.H, req.Text)
+	c.JSON(http.StatusOK, gin.H{"hash": hash})
+}
+
+type SignatureRequest struct {
+	Hash int `json:"hash"`
+	E    int `json:"e"`
+	D    int `json:"d"`
+	N    int `json:"n"`
+}
+
+func SignatureHandler(c *gin.Context) {
+	var req SignatureRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	signature, verification := signature.Signature(req.Hash, req.E, req.D, req.N)
+	c.JSON(http.StatusOK, gin.H{"signature": signature, "verification": verification})
 }

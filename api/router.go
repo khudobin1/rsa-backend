@@ -7,4 +7,6 @@ func SetupRouter(r *gin.Engine) {
 	r.GET("/keys/manual", ManualKeysHandler)
 	r.POST("/cipher", CipherHandler)
 	r.POST("/decipher", DecipherHandler)
+	r.POST("/sign/hash", HashHandler)
+	r.POST("/sign/signature", SignatureHandler)
 }
