@@ -12,7 +12,7 @@ func main() {
 	r := gin.Default()
 
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"https://rsa.khudobin.ru"},
+		AllowAllOrigins:  true,
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length"},
@@ -22,5 +22,5 @@ func main() {
 
 	api.SetupRouter(r)
 	// r.Run(":8080")
-	r.RunTLS(":443", "fullchain.pem", "privkey.pem")
+	r.RunTLS(":443", "certs/fullchain.pem", "certs/privkey.pem")
 }
