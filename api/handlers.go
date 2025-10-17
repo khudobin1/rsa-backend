@@ -99,7 +99,7 @@ func HashHandler(c *gin.Context) {
 		return
 	}
 	hash := signature.Hash(req.N, req.H, req.Text)
-	c.JSON(http.StatusOK, gin.H{"hash": hash})
+	c.JSON(http.StatusOK, gin.H{"hash": hash, "text": req.Text})
 }
 
 type SignatureRequest struct {
